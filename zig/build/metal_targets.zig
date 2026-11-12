@@ -127,7 +127,6 @@ pub fn nativeServer(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
     const kimi_host = b.step("test-kimi-serving-host", "Kimi native text, HTTP and resident budget refusals on the host");
     for ([_]*std.Build.Module{ server_tests, engines }) |module|
         kimi_host.dependOn(&b.addRunArtifact(b.addTest(.{ .root_module = module, .filters = &.{"Kimi"} })).step);
-
     test_step.?.dependOn(&b.addRunArtifact(b.addTest(.{ .root_module = server_json })).step);
     @import("cortheon_fuzz.zig").add(b, target, api, tokenizer, template, core);
     @import("stream_scan_bench.zig").add(b, target, api, tokenizer, template, core);
@@ -145,6 +144,7 @@ pub fn nativeServer(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
     engines.addImport("lanes", api.import_table.get("lanes").?);
     b.step("test-draft-metal-host", "Metal draft source metadata without devices").dependOn(&b.addRunArtifact(b.addTest(.{ .root_module = engines, .filters = &.{"draft sources:"} })).step);
     b.step("test-drafter-skip-metal-host", "Counted shared draft skips without device execution").dependOn(&b.addRunArtifact(b.addTest(.{ .root_module = engine, .filters = &.{"zero grant:"} })).step);
+    b.step("test-gemma4-metal-vtable-host", "Gemma 4 Metal steps its prompt passes (#3021), without devices").dependOn(&b.addRunArtifact(b.addTest(.{ .root_module = engine, .filters = &.{"Gemma Metal steps:"} })).step);
     b.step("test-uocr", "Unlimited-OCR-2's tests (its kernels compile on this GPU)").dependOn(&b.addRunArtifact(b.addTest(.{ .root_module = engine, .filters = &.{"uocr:"} })).step);
     const embed_host = b.step("test-qwen3-metal-host", "Qwen3 Metal embedding geometry, batch bounds and native refusals without GPU work");
     const embed_air = b.addSystemCommand(&.{ "xcrun", "-sdk", "macosx", "metal", b.fmt("-std={s}", .{mlxMetalStd(b)}), "-fno-fast-math", "-c" });
@@ -177,7 +177,6 @@ pub fn nativeServer(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
     b.step("tf-flashnext-batch", "Flash Next shared rounds against fresh legacy replies with prompt admission and cancellation").dependOn(&b.addInstallArtifact(batch, .{}).step);
     return exe;
 }
-
 pub fn metalTargets(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode, draft_ids: *std.Build.Module, build_options: *std.Build.Step.Options, test_step: *std.Build.Step) void {
     const metal_std = b.option([]const u8, "metal-std", "Metal language version (default: MLX's for this macOS)") orelse mlxMetalStd(b);
 
