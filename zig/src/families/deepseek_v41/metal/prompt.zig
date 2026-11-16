@@ -115,7 +115,7 @@ pub const Prompt = struct {
         const t0 = now();
         try p.encode(env, slot, tail, hist, @intCast(hist.len));
         try p.finish(env, slot, tail);
-        if (std.c.getenv("TF_DSV41_PROMPT_PROF") == null) return;
+        if (@import("sys").environment.Process.get(.{}, "TF_DSV41_PROMPT_PROF") == null) return;
         const ms = struct {
             fn of(ns: u64) f64 {
                 return @as(f64, @floatFromInt(ns)) / 1e6;
