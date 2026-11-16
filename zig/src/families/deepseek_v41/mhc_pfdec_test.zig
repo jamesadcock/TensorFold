@@ -267,7 +267,7 @@ test "TF_DSV41_MHC_PFDEC reader: unset / 0 off, 1..64 the fewest rows, anything 
     }
     for ([_][]const u8{ "65", "-1", "on", "" }) |s| {
         Fake.v = s;
-        try testing.expectError(error.BadKnob, pk.mhcPfRows(&Fake.get));
+        try testing.expectError(error.InvalidEnvironment, pk.mhcPfRows(&Fake.get));
     }
 }
 
@@ -360,7 +360,7 @@ fn expectHeld(a: std.mem.Allocator, cs: []const Call, held: []const Call) !usize
 test "TF_DSV41_MHC_DEFER_AT reader: unset / empty / 0 / off the reference's, exchange the hold, anything else refused" {
     for ([_]?[]const u8{ null, "", "0", "off", " OFF " }) |v| try testing.expect(!try branches.deferAt(v));
     for ([_][]const u8{ "exchange", "Exchange", " exchange\n" }) |v| try testing.expect(try branches.deferAt(v));
-    for ([_][]const u8{ "1", "on", "experts", "exchanges" }) |v| try testing.expectError(error.BadDeferAt, branches.deferAt(v));
+    for ([_][]const u8{ "1", "on", "experts", "exchanges" }) |v| try testing.expectError(error.InvalidEnvironment, branches.deferAt(v));
 }
 
 test "TF_DSV41_MHC_DEFER_AT=exchange: decode windows' coefficient launches each move to just before their sublayer's exchange, nothing else changes" {
@@ -439,7 +439,7 @@ test "TF_DSV41_MHC_DEFER_AT_ROWS: the reader; programs over the threshold keep t
     try testing.expectEqual(@as(i64, 0), try branches.deferAtRows(null));
     try testing.expectEqual(@as(i64, 0), try branches.deferAtRows(" "));
     try testing.expectEqual(@as(i64, 16), try branches.deferAtRows("16"));
-    for ([_][]const u8{ "-1", "65", "x" }) |v| try testing.expectError(error.BadDeferAt, branches.deferAtRows(v));
+    for ([_][]const u8{ "-1", "65", "x" }) |v| try testing.expectError(error.InvalidEnvironment, branches.deferAtRows(v));
     var arena = std.heap.ArenaAllocator.init(testing.allocator);
     defer arena.deinit();
     const a = arena.allocator();
