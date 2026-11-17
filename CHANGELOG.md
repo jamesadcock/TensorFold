@@ -4,6 +4,8 @@ Each release's page on GitHub has its notes and measurements. See [the 1.0.0 rel
 
 ## Unreleased
 
+- CI: remove the redundant nightly Linux host shard while retaining the fast, compile, HIP and DeepSeek shards (#3276).
+
 - CI: the app workflow keeps its Linux AppImage artifact for 3 days instead of GitHub's default 90 (#2966).
 
 - CI: the Linux no-GPU job runs `zig build test-host`, which collects the named host tests and compile checks apart from nine reviewed exclusions (the optional xgrammar steps, the release-path check, the two large-state timing commands, which stay available for explicit runs, and four fixture and source-pin checks held back under #2031); the build graph refuses empty checks, stale exclusions and aliases that bring excluded work back (#2095, part of #2031). Thanks to @garvrao80.
