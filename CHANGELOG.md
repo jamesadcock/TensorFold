@@ -4,6 +4,8 @@ Each release's page on GitHub has its notes and measurements. See [the 1.0.0 rel
 
 ## Unreleased
 
+- Metal: presence_penalty and frequency_penalty on Qwen3.8-Flash-Next and Qwen3.8-27B, with drafted replies equal to undrafted ones; --instruct-sampling serves the card's presence_penalty 1.5 on both (#3145).
+
 - CLI: `tensorfold launch <agent>` starts Claude Code, Codex, OpenCode or Hermes against the local server, with the API base URL and key set only in the agent's environment; no agent config or home-folder files change (#3248, fixes #3199).
 
 - Nemotron 3.5 Super at TP=2 on CUDA: rank 1 gets one header a decode window and one exact-size message a layer, so it queues a window's layers with no host read between them (#2839).
